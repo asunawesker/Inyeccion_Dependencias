@@ -38,6 +38,10 @@ public class Main {
 //        
 //        personaDao.create(p1);
 
+        DaoPersona personaEliminada = new DaoPersona();
+        
+        personaEliminada.delete(2);
+
         DaoPersona personas =new DaoPersona();
         List ls = new ArrayList();
         ls = personas.readAll();

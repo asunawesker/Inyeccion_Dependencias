@@ -49,14 +49,14 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
                 boolean response = false;
                 
                 try {
-                     preparedStatement = connection.prepareStatement(QUERIES[0]);
+                    preparedStatement = connection.prepareStatement(QUERIES[0]);
                     
-                     preparedStatement.setLong(1, this.pojo.getClave());
-                     preparedStatement.setString(2, this.pojo.getNombre());
-                     preparedStatement.setString(3, this.pojo.getDireccion());
-                     preparedStatement.setString(4, this.pojo.getTelefono());
+                    preparedStatement.setLong(1, this.pojo.getClave());
+                    preparedStatement.setString(2, this.pojo.getNombre());
+                    preparedStatement.setString(3, this.pojo.getDireccion());
+                    preparedStatement.setString(4, this.pojo.getTelefono());
                     
-                    int rows =  preparedStatement.executeUpdate(); 
+                    preparedStatement.executeUpdate(); 
                     
                     System.out.println("Persona guardada");
                      
@@ -77,7 +77,29 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
 
     @Override
     public boolean delete(Integer id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose Tools | Templates.
+        TransactionDB t;
+        
+        t = new TransactionDB<Persona>(){
+            @Override
+            public boolean execute(Connection connection) {
+                boolean response = false;
+                try {
+                    preparedStatement = connection.prepareStatement(QUERIES[1]);
+                    preparedStatement.setInt(1, id);
+                    preparedStatement.executeUpdate();
+                    
+                    response = true;
+                    return response;
+                } catch (SQLException ex) {
+                    Logger.getLogger(DaoPersona.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return response;
+            }            
+        };
+        
+        boolean response = connection.execute(t);
+        
+        return response;
     }
 
     @Override
