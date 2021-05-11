@@ -7,6 +7,10 @@ package inyecciondependencias;
 
 import database.ConnectionDB;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.DaoPersona;
 import model.Persona;
 
@@ -24,16 +28,27 @@ public class Main {
         
         ConnectionDB connectionDB = ConnectionDB.getInstance();
         
-        Persona p1 = new Persona();
-        p1.setClave(1);
-        p1.setNombre("Irais Aguirre Valente");
-        p1.setDireccion("Norte 16");
-        p1.setTelefono("2721670898");
+//        Persona p1 = new Persona();
+//        p1.setClave(2);
+//        p1.setNombre("Maricela Cruz Arenas");
+//        p1.setDireccion("Mártires");
+//        p1.setTelefono("2721671501");
+//        
+//        DaoPersona personaDao = new DaoPersona();
+//        
+//        personaDao.create(p1);
+
+        DaoPersona personas =new DaoPersona();
+        List ls = new ArrayList();
+        ls = personas.readAll();
         
-        DaoPersona personaDao = new DaoPersona();
-        
-        personaDao.create(p1);
+        verPersonas(ls);
         
     }
     
+    public static void verPersonas(List<Persona> personas){
+        personas.forEach(persona -> {
+            System.out.println("Nombre: "+persona.getNombre());
+        });
+    }
 }

@@ -14,6 +14,8 @@ import java.sql.Connection;
 public abstract class TransactionDB<T> {
     protected T pojo;
 
+    public TransactionDB(){}
+    
     public TransactionDB(T pojo) {
         this.pojo = pojo;
     }    
