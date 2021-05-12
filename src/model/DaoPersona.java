@@ -25,6 +25,7 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
     private PreparedStatement  preparedStatement;
     private ConnectionDB connection ;
     private List <Persona> ls;
+    private Persona persona;
 
     public DaoPersona() throws SQLException {
         connection = ConnectionDB.getInstance();
@@ -104,7 +105,34 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
 
     @Override
     public Persona readSingle(Integer id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");  //To change body of generated methods, choose Tools | Templates.
+       TransactionDB t;
+        
+        t = new TransactionDB<Persona>(){
+           @Override
+           public boolean execute(Connection connection) {
+               boolean response = false;
+               try {
+                   preparedStatement = connection.prepareStatement(QUERIES[2]);
+                   preparedStatement.setInt(1, id);
+                   ResultSet result = preparedStatement.executeQuery();
+                   persona = new Persona();
+                   
+                   while(result.next()){
+                       persona.setClave(result.getInt("clave"));
+                        persona.setNombre(result.getString("nombre"));
+                        persona.setDireccion(result.getString("direccion"));
+                        persona.setTelefono(result.getString("telefono"));
+                   }
+                   response = true;
+                   return response;
+               } catch (SQLException ex) {
+                   Logger.getLogger(DaoPersona.class.getName()).log(Level.SEVERE, null, ex);
+               }
+               return response;
+           }  
+        };
+        connection.execute(t);
+        return persona;
     }
 
     @Override
@@ -119,14 +147,14 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
                     Persona persona;
                     
                     preparedStatement = connection.prepareStatement(QUERIES[3]);
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                    ResultSet result = preparedStatement.executeQuery();
                     
-                    while  (resultSet.next()){
+                    while  (result.next()){
                         persona = new Persona();
-                        persona.setClave(resultSet.getInt("clave"));
-                        persona.setNombre(resultSet.getString("nombre"));
-                        persona.setDireccion(resultSet.getString("direccion"));
-                        persona.setTelefono(resultSet.getString("telefono"));
+                        persona.setClave(result.getInt("clave"));
+                        persona.setNombre(result.getString("nombre"));
+                        persona.setDireccion(result.getString("direccion"));
+                        persona.setTelefono(result.getString("telefono"));
                         ls.add(persona);
                     }
                     response = true;

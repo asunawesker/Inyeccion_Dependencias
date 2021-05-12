@@ -9,8 +9,6 @@ import database.ConnectionDB;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.DaoPersona;
 import model.Persona;
 
@@ -28,25 +26,27 @@ public class Main {
         
         ConnectionDB connectionDB = ConnectionDB.getInstance();
         
-//        Persona p1 = new Persona();
-//        p1.setClave(2);
-//        p1.setNombre("Maricela Cruz Arenas");
-//        p1.setDireccion("Mártires");
-//        p1.setTelefono("2721671501");
-//        
-//        DaoPersona personaDao = new DaoPersona();
-//        
-//        personaDao.create(p1);
-
-        DaoPersona personaEliminada = new DaoPersona();
+/*        Persona p1 = new Persona();
+        p1.setClave(2);
+        p1.setNombre("Maricela Cruz Arenas");
+        p1.setDireccion("Mártires");
+        p1.setTelefono("2721671501");
         
-        personaEliminada.delete(2);
+        DaoPersona personaDao = new DaoPersona();
+        
+        personaDao.create(p1);*/
+
+//        DaoPersona personaEliminada = new DaoPersona();
+//        
+//        personaEliminada.delete(2);
 
         DaoPersona personas =new DaoPersona();
         List ls = new ArrayList();
         ls = personas.readAll();
         
         verPersonas(ls);
+                        
+        System.out.println(personas.readSingle(1).getNombre());
         
     }
     
