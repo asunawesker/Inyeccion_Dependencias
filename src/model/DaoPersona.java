@@ -28,8 +28,7 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
     private Persona persona;
 
     public DaoPersona() throws SQLException {
-        connection = ConnectionDB.getInstance();
-        ls = new ArrayList<>();
+        connection = ConnectionDB.getInstance();        
     }        
     
     private final String[] QUERIES = {
@@ -37,7 +36,7 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
         "DELETE FROM persona WHERE clave= ?",
         "SELECT * FROM persona WHERE clave= ?",
         "SELECT * FROM persona",
-        "UPDATE persona SET crs_name = ? WHERE (clave= ?)"
+        "UPDATE persona SET nombre = ? WHERE (clave= ?)"
     };
 
     @Override
@@ -89,6 +88,8 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
                     preparedStatement.setInt(1, id);
                     preparedStatement.executeUpdate();
                     
+                    System.out.println("Persona eliminada");
+                    
                     response = true;
                     return response;
                 } catch (SQLException ex) {
@@ -138,6 +139,7 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
     @Override
     public List<Persona> readAll() throws SQLException {
         TransactionDB t;
+        ls = new ArrayList<>();
                 
         t = new TransactionDB<Persona>() {
             @Override
@@ -165,13 +167,35 @@ public class DaoPersona implements IDaoGeneral<Persona, Integer>{
                 return response;
             }            
         };
-         boolean response = connection.execute(t);        
+         connection.execute(t);        
          return ls;
     }
 
     @Override
     public boolean update(Persona pojo, Integer id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");  //To change body of generated methods, choose Tools | Templates.
+        TransactionDB t;
+        boolean response;
+        
+        t = new TransactionDB<Persona>(pojo){
+            @Override
+            public boolean execute(Connection connection) {
+                boolean response = false;
+                try {
+                    preparedStatement = connection.prepareStatement(QUERIES[4]);
+                    
+                    preparedStatement.setString(1, this.pojo.getNombre());
+                    preparedStatement.setLong(2, this.pojo.getClave());
+
+                    preparedStatement.executeUpdate();
+                    response = true;                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(DaoPersona.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return response;
+            }            
+        };
+        response = connection.execute(t);
+        return response;
     }
         
 }

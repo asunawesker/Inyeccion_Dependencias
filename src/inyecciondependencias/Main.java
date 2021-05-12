@@ -41,13 +41,20 @@ public class Main {
 //        personaEliminada.delete(2);
 
         DaoPersona personas =new DaoPersona();
+        
+        Persona p2 = new Persona();
+        p2.setNombre("Uriel Carmona Rosas");
+        p2.setClave(2);
+        
+        personas.update(p2, 2);
+        
         List ls = new ArrayList();
         ls = personas.readAll();
         
         verPersonas(ls);
                         
-        System.out.println(personas.readSingle(1).getNombre());
-        
+        //System.out.println(personas.readSingle(1).getNombre());       
+                
     }
     
     public static void verPersonas(List<Persona> personas){
